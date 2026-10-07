@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-interceptor
+  labels:
+    app.kubernetes.io/name: dns-interceptor
+    app.kubernetes.io/part-of: ic7602-p1
+spec:
+  replicas: {{ .Values.replicaCount.dnsInterceptor }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dns-interceptor
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dns-interceptor
+        app.kubernetes.io/part-of: ic7602-p1
+    spec:
+      containers:
+        - name: dns-interceptor
+          image: "{{ .Values.images.dnsInterceptor.repository }}:{{ .Values.images.dnsInterceptor.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - name: dns-udp
+              containerPort: {{ .Values.service.dnsInterceptor.port }}
+              protocol: UDP
+          env:
+            - name: LISTEN_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: ic7602-p1-config
+                  key: LISTEN_ADDR
+            - name: DNS_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ic7602-p1-config
+                  key: DNS_API_URL
+            - name: API_TIMEOUT_MS
+              valueFrom:
+                configMapKeyRef:
+                  name: ic7602-p1-config
+                  key: API_TIMEOUT_MS

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-interceptor
+  labels:
+    app.kubernetes.io/name: dns-interceptor
+    app.kubernetes.io/part-of: ic7602-p1
+spec:
+  type: {{ .Values.service.dnsInterceptor.type }}
+  selector:
+    app.kubernetes.io/name: dns-interceptor
+  ports:
+    - name: dns-udp
+      port: {{ .Values.service.dnsInterceptor.port }}
+      targetPort: {{ .Values.service.dnsInterceptor.port }}
+      protocol: UDP

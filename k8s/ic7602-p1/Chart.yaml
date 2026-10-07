@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ic7602-p1
+description: Andamiaje de infraestructura para IC7602-P1
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

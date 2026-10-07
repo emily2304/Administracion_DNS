@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ic7602-p1-config
+data:
+  LISTEN_ADDR: {{ .Values.config.listenAddr | quote }}
+  EXTERNAL_DNS_SERVER: {{ .Values.config.externalDnsServer | quote }}
+  EXTERNAL_DNS_PORT: {{ .Values.config.externalDnsPort | quote }}
+  DNS_API_URL: {{ .Values.config.dnsApiUrl | quote }}
+  API_TIMEOUT_MS: {{ .Values.config.apiTimeoutMs | quote }}
+
+  # Configuración del Health Checker
+  SUPABASE_URL: {{ .Values.config.supabaseUrl | quote }}
+  POLL_INTERVAL_SEC: {{ .Values.config.healthCheckerPollIntervalSec | quote }}
+

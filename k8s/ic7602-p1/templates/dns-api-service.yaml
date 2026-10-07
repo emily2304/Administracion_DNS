@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-api
+  labels:
+    app.kubernetes.io/name: dns-api
+    app.kubernetes.io/part-of: ic7602-p1
+spec:
+  type: {{ .Values.service.dnsApi.type }}
+  selector:
+    app.kubernetes.io/name: dns-api
+  ports:
+    - name: http
+      port: {{ .Values.service.dnsApi.port }}
+      targetPort: {{ .Values.service.dnsApi.port }}
+      protocol: TCP

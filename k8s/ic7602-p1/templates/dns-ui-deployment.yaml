@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-ui
+  labels:
+    app.kubernetes.io/name: dns-ui
+    app.kubernetes.io/part-of: ic7602-p1
+spec:
+  replicas: {{ .Values.replicaCount.dnsUi }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dns-ui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dns-ui
+        app.kubernetes.io/part-of: ic7602-p1
+    spec:
+      containers:
+        - name: dns-ui
+          image: "{{ .Values.images.dnsUi.repository }}:{{ .Values.images.dnsUi.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.dnsUi.targetPort }}
+              protocol: TCP

@@ -1,0 +1,46 @@
+{{- if .Values.healthChecker.enabled }}
+{{- range .Values.healthCheckers }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-checker-{{ .id }}
+  labels:
+    app.kubernetes.io/name: health-checker
+    app.kubernetes.io/instance: {{ .id }}
+    app.kubernetes.io/part-of: ic7602-p1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: health-checker
+      app.kubernetes.io/instance: {{ .id }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: health-checker
+        app.kubernetes.io/instance: {{ .id }}
+        app.kubernetes.io/part-of: ic7602-p1
+    spec:
+      containers:
+        - name: health-checker
+          image: "{{ $.Values.images.healthChecker.repository }}:{{ $.Values.images.healthChecker.tag }}"
+          imagePullPolicy: {{ $.Values.imagePullPolicy }}
+          env:
+            - name: CHECKER_ID
+              value: {{ .id | quote }}
+            - name: CHECKER_LATITUDE
+              value: {{ .latitude | quote }}
+            - name: CHECKER_LONGITUDE
+              value: {{ .longitude | quote }}
+            - name: CHECKER_COUNTRY
+              value: {{ .country | quote }}
+            - name: CHECKER_CITY
+              value: {{ .city | quote }}
+          envFrom:
+            - configMapRef:
+                name: ic7602-p1-config
+            - secretRef:
+                name: ic7602-p1-secret
+---
+{{- end }}
+{{- end }}

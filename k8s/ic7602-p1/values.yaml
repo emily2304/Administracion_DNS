@@ -1,0 +1,65 @@
+images:
+  dnsInterceptor:
+    repository: ic7602-p1/dns-interceptor
+    tag: latest
+  dnsApi:
+    repository: ic7602-p1/dns-api
+    tag: latest
+  dnsUi:
+    repository: ic7602-p1/dns-ui
+    tag: latest
+  healthChecker:
+    repository: ic7602-p1/health-checker
+    tag: latest
+
+imagePullPolicy: IfNotPresent
+
+replicaCount:
+  dnsInterceptor: 1
+  dnsApi: 1
+  dnsUi: 1
+
+healthChecker:
+  enabled: true
+
+# Lista de nodos Health Checker por ubicación
+healthCheckers:
+  - id: cr
+    latitude: "9.9281"
+    longitude: "-84.0907"
+    country: "CR"
+    city: "San Jose"
+  - id: es
+    latitude: "40.4168"
+    longitude: "-3.7038"
+    country: "ES"
+    city: "Madrid"
+  - id: us
+    latitude: "37.7749"
+    longitude: "-122.4194"
+    country: "US"
+    city: "San Francisco"
+
+service:
+  dnsInterceptor:
+    type: ClusterIP
+    port: 53
+  dnsApi:
+    type: ClusterIP
+    port: 8080
+  dnsUi:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+
+config:
+  listenAddr: 0.0.0.0:53
+  dnsApiUrl: http://dns-api:8080
+  apiTimeoutMs: "3000"
+  externalDnsServer: 8.8.8.8
+  externalDnsPort: "53"
+  supabaseUrl: https://supabase.example.invalid
+  healthCheckerPollIntervalSec: "30"
+
+secret:
+  supabaseKey: CLAVE_SUPABASE_DE_EJEMPLO

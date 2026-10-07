@@ -1,0 +1,35 @@
+services:
+  dns-interceptor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dns-interceptor
+    ports:
+      - "5353:53/udp"   # host:contenedor -> podés apuntar nslookup a localhost:5353
+    environment:
+      # Dentro de la red de docker-compose, el DNS API se llama "dns-api"
+      # (el nombre del servicio de abajo). Hay que ajustar el puerto al que se use en DNS API 
+      DNS_API_URL: "http://dns-api:8080"
+      LISTEN_ADDR: "0.0.0.0:53"
+      API_TIMEOUT_MS: "3000"
+      RUST_LOG: "info"
+    restart: unless-stopped
+    networks:
+      - dns-net
+
+  # Descomentar cuando el contenedor del DNS API (Java) esté listo.
+  # Debe estar en la misma red (dns-net) y exponer el puerto que se
+  # configure arriba en DNS_API_URL.
+  #
+  # dns-api:
+  #   build:
+  #     context: ../dns-api
+  #   container_name: dns-api
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - dns-net
+
+networks:
+  dns-net:
+    driver: bridge
